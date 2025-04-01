@@ -199,11 +199,11 @@
                             resultDiv.textContent = '刑事局。';
                         }
                     });
-                } else if (drugType === 3 || drugType === 4 && amount > 100) {
+                } else if ((drugType === 3 || drugType === 4) && amount > 100) {
                     resultDiv.textContent = '刑事局。';
-                } else if (drugType === 3 || drugType === 4 && amount > 1 && amount <= 20) {
+                } else if ((drugType === 3 || drugType === 4) && amount > 1 && amount <= 20) {
                     resultDiv.textContent = '航醫。';
-                } else if (drugType === 3 || drugType === 4 && amount > 20 && amount <= 100) {
+                } else if ((drugType === 3 || drugType === 4) && amount > 20 && amount <= 100) {
                     // 顯示毒品選項
                     document.getElementById('otherDrugOptionsGroup').style.display = 'block';
                     document.getElementById('otherDrugOptions').addEventListener('change', function () {
@@ -222,3 +222,4 @@
     </script>
 </body>
 </html>
+
