@@ -1,272 +1,226 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>毒品要送哪</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f9;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-        }
-
-        select, input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            color: #721c24;
-        }
-
-        .result-answer {
-            font-size: 18px;
-            font-weight: bold;
-            color: #d9534f; /* 使用醒目的紅色 */
-        }
-
-        .options-group {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #e2e3e5;
-            border-radius: 5px;
-        }
-
-        .link-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .link-container a {
-            font-size: 16px;
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        .link-container a:hover {
-            text-decoration: underline;
-        }
-
-        .refresh-text {
-            font-size: 16px;
-            color: #6c757d;
-            font-weight: normal;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>毒品要送哪</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: 5px;
+      color: #721c24;
+    }
+    .result-answer {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d9534f;
+    }
+    .refresh-text {
+      font-size: 16px;
+      color: #6c757d;
+    }
+  </style>
 </head>
 <body>
+<div class="container">
+  <h1>毒品要送哪</h1>
 
-    <div class="container">
-        <h1>毒品要送哪</h1>
+  <div class="form-group">
+    <label for="isMixed">是否為混合式毒品？</label>
+    <select id="isMixed">
+      <option value="yes" selected>是</option>
+      <option value="no">否</option>
+    </select>
+  </div>
 
-        <div class="form-group">
-            <label for="isMixed">是否為混合式毒品？</label>
-            <select id="isMixed">
-                <option value="yes" selected>是</option>
-                <option value="no">否</option>
-            </select>
-        </div>
+  <div class="form-group" id="quantityGroup">
+    <label for="quantity">總數量：</label>
+    <input type="number" id="quantity" placeholder="請輸入總數量"/>
+  </div>
 
-        <div class="form-group" id="quantityGroup">
-            <label for="quantity">總數量：</label>
-            <input type="number" id="quantity" placeholder="請輸入總數量">
-        </div>
+  <div class="form-group" id="drugTypeGroup" style="display:none;">
+    <label for="drugType">毒品種類級數（1-4）：</label>
+    <input type="number" id="drugType" min="1" max="4" placeholder="請輸入1至4的數字"/>
+  </div>
 
-        <div class="form-group" id="drugTypeGroup" style="display:none;">
-            <label for="drugType">毒品種類級數（1-4）：</label>
-            <input type="number" id="drugType" min="1" max="4" placeholder="請輸入1至4的數字">
-        </div>
+  <div class="form-group" id="amountGroup" style="display:none;">
+    <label for="amount">克數：</label>
+    <input type="number" id="amount" placeholder="請輸入克數"/>
+  </div>
 
-        <div class="form-group" id="amountGroup" style="display:none;">
-            <label for="amount">克數：</label>
-            <input type="number" id="amount" placeholder="請輸入克數">
-        </div>
+  <div class="form-group" id="drugOptionsGroup" style="display:none;">
+    <label for="drugOptions">選擇毒品類型：</label>
+    <select id="drugOptions"></select>
+  </div>
 
-        <div class="form-group" id="drugOptionsGroup" class="options-group" style="display:none;">
-            <label for="drugOptions">選擇毒品類型：</label>
-            <select id="drugOptions">
-                <option value="1">大麻類</option>
-                <option value="2">古柯類</option>
-                <option value="3">甲基安非他命類</option>
-                <option value="4">非屬以上</option>
-            </select>
-        </div>
+  <div class="form-group options-group" id="otherDrugOptionsGroup" style="display:none;">
+    <label for="otherDrugOptions">選擇毒品種類：</label>
+    <select id="otherDrugOptions">
+      <option value="1">愷他命、硝甲西泮</option>
+      <option value="2">其他</option>
+    </select>
+  </div>
 
-        <div class="form-group" id="otherDrugOptionsGroup" class="options-group" style="display:none;">
-            <label for="otherDrugOptions">選擇毒品種類：</label>
-            <select id="otherDrugOptions">
-                <option value="1">愷他命、硝甲西泮</option>
-                <option value="2">其他</option>
-            </select>
-        </div>
+  <button onclick="checkDrug()">提交</button>
 
-        <button onclick="checkDrug()">提交</button>
+  <div id="result" class="result" style="display:none;">
+    <div class="result-answer" id="resultAnswer"></div>
+    <div class="refresh-text" id="refreshText"></div>
+  </div>
+</div>
+<!-- 🔗 Google Drive 連結區塊 -->
+<div style="text-align: center; margin-top: 30px;">
+  <p><strong>666抽樣及分工表在以下連結：</strong></p>
+  <a href="https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL" target="_blank">
+    👉 點我前往 Google Drive 資料夾
+  </a>
+</div>
 
-        <div id="result" class="result" style="display:none;">
-            <div class="result-answer" id="resultAnswer"></div>
-            <div class="refresh-text" id="refreshText"></div>
-        </div>
-    </div>
+<script>
+  const isMixedEl = document.getElementById('isMixed');
+  const quantityGroup = document.getElementById('quantityGroup');
+  const drugTypeGroup = document.getElementById('drugTypeGroup');
+  const amountGroup = document.getElementById('amountGroup');
+  const drugOptionsGroup = document.getElementById('drugOptionsGroup');
+  const otherDrugOptionsGroup = document.getElementById('otherDrugOptionsGroup');
+  const resultAnswerDiv = document.getElementById('resultAnswer');
+  const refreshTextDiv = document.getElementById('refreshText');
+  const resultDiv = document.getElementById('result');
 
-    <!-- 在這裡加入 Google Drive 連結 -->
-    <div class="link-container">
-        <p>更多資料請參見 <a href="https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL?usp=sharing" target="_blank">Google Drive 資料夾</a></p>
-    </div>
+  isMixedEl.addEventListener('change', function () {
+    const isMixed = this.value;
+    quantityGroup.style.display = isMixed === 'yes' ? 'block' : 'none';
+    drugTypeGroup.style.display = isMixed === 'no' ? 'block' : 'none';
+    amountGroup.style.display = isMixed === 'no' ? 'block' : 'none';
+    drugOptionsGroup.style.display = 'none';
+    otherDrugOptionsGroup.style.display = 'none';
+    resultDiv.style.display = 'none';
+  });
 
-    <script>
-        // 預設選擇為「是」，顯示總數量輸入框
-        document.getElementById('isMixed').value = 'yes';
-        document.getElementById('quantityGroup').style.display = 'block';
+  function updateDrugOptionsLazy(optionValues) {
+    const optionsMap = {
+      '1': '大麻類',
+      '2': '古柯類',
+      '3': '甲基安非他命類',
+      '4': '非屬以上'
+    };
+    const drugOptions = document.getElementById('drugOptions');
+    drugOptions.innerHTML = '<option disabled selected>請選擇毒品類型</option>';
+    drugOptionsGroup.style.display = 'block';
 
-        // 顯示或隱藏相應的輸入框
-        document.getElementById('isMixed').addEventListener('change', function () {
-            const isMixed = this.value;
-            if (isMixed === 'yes') {
-                document.getElementById('quantityGroup').style.display = 'block';
-                document.getElementById('drugTypeGroup').style.display = 'none';
-                document.getElementById('amountGroup').style.display = 'none';
-                document.getElementById('drugOptionsGroup').style.display = 'none';
-                document.getElementById('otherDrugOptionsGroup').style.display = 'none';
-            } else {
-                document.getElementById('quantityGroup').style.display = 'none';
-                document.getElementById('drugTypeGroup').style.display = 'block';
-                document.getElementById('amountGroup').style.display = 'block';
-                document.getElementById('drugOptionsGroup').style.display = 'none';
-                document.getElementById('otherDrugOptionsGroup').style.display = 'none';
-            }
-            document.getElementById('result').style.display = 'none'; // 清除結果
-        });
+    let loaded = false;
+    drugOptions.addEventListener('click', function () {
+      if (loaded) return;
+      optionValues.forEach(val => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = optionsMap[val];
+        drugOptions.appendChild(opt);
+      });
+      loaded = true;
+    });
 
-        function checkDrug() {
-            const isMixed = document.getElementById('isMixed').value;
-            const resultDiv = document.getElementById('result');
-            const resultAnswerDiv = document.getElementById('resultAnswer');
-            const refreshTextDiv = document.getElementById('refreshText');
+    drugOptions.onchange = function () {
+      const selected = this.value;
+      if (selected === '1' || selected === '2') resultAnswerDiv.textContent = '調查局。';
+      else if (selected === '3') resultAnswerDiv.textContent = '航醫。';
+      else resultAnswerDiv.textContent = '刑事局。';
 
-            resultDiv.style.display = 'block';
+      if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
+    };
+  }
 
-            // 先檢查是否有必填的資料
-            if (isMixed === 'yes') {
-                const quantity = parseFloat(document.getElementById('quantity').value);
-                if (!quantity || quantity <= 0) {
-                    resultAnswerDiv.textContent = '請輸入有效的總數量。';
-                    refreshTextDiv.textContent = '請重新刷新';
-                    return;
-                }
-                if (quantity >= 10 && quantity < 500) {
-                    resultAnswerDiv.textContent = '抽樣後送航醫。';
-                } else if (quantity < 10) {
-                    resultAnswerDiv.textContent = '送航醫。';
-                } else {
-                    resultAnswerDiv.textContent = '抽樣後送刑事局。';
-                }
-            } else {
-                const drugType = parseInt(document.getElementById('drugType').value);
-                const amount = parseFloat(document.getElementById('amount').value);
+  function checkDrug() {
+    resultDiv.style.display = 'block';
+    drugOptionsGroup.style.display = 'none';
+    otherDrugOptionsGroup.style.display = 'none';
+    resultAnswerDiv.textContent = '';
+    refreshTextDiv.textContent = '';
 
-                // 驗證毒品級數是否為 1-4 之間的整數
-                if (drugType < 1 || drugType > 4 || !Number.isInteger(drugType)) {
-                    resultAnswerDiv.textContent = '請輸入正確毒品級數';
-                    refreshTextDiv.textContent = '請重新刷新';
-                    return;
-                }
+    const isMixed = isMixedEl.value;
 
-                if (!amount || amount <= 0) {
-                    resultAnswerDiv.textContent = '請填寫所有必要的資料。';
-                    refreshTextDiv.textContent = '請重新刷新';
-                    return;
-                }
+    if (isMixed === 'yes') {
+      const quantity = parseFloat(document.getElementById('quantity').value);
+      if (!quantity || quantity <= 0) {
+        resultAnswerDiv.textContent = '請輸入有效的總數量。';
+        return;
+      }
+      if (quantity < 10) resultAnswerDiv.textContent = '送航醫。';
+      else if (quantity < 500) resultAnswerDiv.textContent = '抽樣後送航醫。';
+      else resultAnswerDiv.textContent = '抽樣後送刑事局。';
+    } else {
+      const drugType = parseInt(document.getElementById('drugType').value);
+      const amount = parseFloat(document.getElementById('amount').value);
+      if (!amount || amount <= 0 || drugType < 1 || drugType > 4 || !Number.isInteger(drugType)) {
+        resultAnswerDiv.textContent = '請檢查級數或重量輸入是否正確。';
+        return;
+      }
 
-                if (drugType === 1 && amount <= 1) {
-                    resultAnswerDiv.textContent = '送航醫。';
-                } else if (drugType === 1 && amount > 1) {
-                    resultAnswerDiv.textContent = '調查局。';
-                } else if (drugType === 2 && amount > 1 && amount <= 10) {
-                    resultAnswerDiv.textContent = '本局鑑識中心。';
-                } else if (drugType === 2 && amount > 10 ) {
-                    // 顯示毒品選擇框
-                    document.getElementById('drugOptionsGroup').style.display = 'block';
-                    document.getElementById('drugOptions').addEventListener('change', function () {
-                        const selectedOption = parseInt(this.value);
-                        if (selectedOption === 1 || selectedOption === 2) {
-                            resultAnswerDiv.textContent = '調查局。';
-                        } else if (selectedOption === 3) {
-                            resultAnswerDiv.textContent = '航醫。';
-                        } else if (selectedOption === 4) {
-                            resultAnswerDiv.textContent = '刑事局。';
-                        }
-                        refreshTextDiv.textContent = '請重新刷新';
-                    });
-                } else if ((drugType === 3 || drugType === 4) && amount > 100) {
-                    resultAnswerDiv.textContent = '刑事局。';
-                } else if ((drugType === 3 || drugType === 4) && amount > 1 && amount <= 20) {
-                    resultAnswerDiv.textContent = '航醫。';
-                } else if ((drugType === 3 || drugType === 4) && amount > 20 && amount <= 100) {
-                    // 顯示毒品選項
-                    document.getElementById('otherDrugOptionsGroup').style.display = 'block';
-                    document.getElementById('otherDrugOptions').addEventListener('change', function () {
-                        const selectedOtherOption = parseInt(this.value);
-                        if (selectedOtherOption === 1) {
-                            resultAnswerDiv.textContent = '航醫。';
-                        } else if (selectedOtherOption === 2) {
-                            resultAnswerDiv.textContent = '刑事局。';
-                        }
-                        refreshTextDiv.textContent = '請重新刷新';
-                    });
-                } else {
-                    resultAnswerDiv.textContent = '刑事局。';
-                }
-            }
+      if (drugType === 1 && amount <= 1) resultAnswerDiv.textContent = '送航醫。';
+      else if (drugType === 1 && amount > 1) resultAnswerDiv.textContent = '調查局。';
+      else if (drugType === 2 && amount > 1 && amount <= 10) resultAnswerDiv.textContent = '本局鑑識中心。';
+      else if (drugType === 2 && amount > 10 && amount <= 100) updateDrugOptionsLazy(['1', '2', '3', '4']);
+      else if (drugType === 2 && amount > 100) updateDrugOptionsLazy(['1', '2', '4']);
+      else if ((drugType === 3 || drugType === 4) && amount > 100) resultAnswerDiv.textContent = '刑事局。';
+      else if ((drugType === 3 || drugType === 4) && amount > 1 && amount <= 20) resultAnswerDiv.textContent = '航醫。';
+      else if ((drugType === 3 || drugType === 4) && amount > 20 && amount <= 100) {
+        otherDrugOptionsGroup.style.display = 'block';
+        document.getElementById('otherDrugOptions').onchange = function () {
+          const val = this.value;
+          resultAnswerDiv.textContent = val === '1' ? '航醫。' : '刑事局。';
+          refreshTextDiv.textContent = '請重新刷新';
+        };
+      } else resultAnswerDiv.textContent = '刑事局。';
+    }
 
-            refreshTextDiv.textContent = '請重新刷新';  // 顯示重新刷新的提示
-        }
-    </script>
+    if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
+  }
+</script>
 </body>
 </html>
-
