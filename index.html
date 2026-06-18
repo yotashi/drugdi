@@ -208,7 +208,7 @@
       if (drugType === 1 && amount <= 1) resultAnswerDiv.textContent = '送航醫。';
       else if (drugType === 1 && amount > 1) resultAnswerDiv.textContent = '調查局。';
       else if (drugType === 2 && amount > 1 && amount <= 10) resultAnswerDiv.textContent = '本局鑑識中心。';
-      else if (drugType === 2 && amount > 10 && amount <= 100) updateDrugOptionsLazy(['1', '2', '3', '4']);
+      else if (drugType === 2 && amount > 10 && amount <= 100) updateDrugOptionsLazy(['1', '2', '3', '4', '5']);
       else if (drugType === 2 && amount > 100) updateDrugOptionsLazy(['1', '2', '4']);
       else if ((drugType === 3 || drugType === 4) && amount > 100) resultAnswerDiv.textContent = '刑事局。';
       else if ((drugType === 3 || drugType === 4) && amount > 1 && amount <= 20) resultAnswerDiv.textContent = '航醫。';
