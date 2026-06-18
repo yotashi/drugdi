@@ -194,7 +194,7 @@
         resultAnswerDiv.textContent = '請輸入有效的總數量。';
         return;
       }
-      if (quantity < 10) resultAnswerDiv.textContent = '送航醫。';
+      if (quantity < 10) resultAnswerDiv.textContent = '航醫。';
       else if (quantity < 500) resultAnswerDiv.textContent = '抽樣後送航醫。';
       else resultAnswerDiv.textContent = '抽樣後送刑事局。';
     } else {
@@ -205,14 +205,16 @@
         return;
       }
 
-      if (drugType === 1 && amount <= 1) resultAnswerDiv.textContent = '送航醫。';
+      if (drugType === 1 && amount <= 1) resultAnswerDiv.textContent = '航醫。';
       else if (drugType === 1 && amount > 1) resultAnswerDiv.textContent = '調查局。';
       else if (drugType === 2 && amount > 1 && amount <= 10) resultAnswerDiv.textContent = '本局鑑識中心。';
       else if (drugType === 2 && amount > 10 && amount <= 100) updateDrugOptionsLazy(['1', '2', '3', '4', '5']);
       else if (drugType === 2 && amount > 100) updateDrugOptionsLazy(['1', '2', '4']);
-      else if ((drugType === 3 || drugType === 4) && amount > 100) resultAnswerDiv.textContent = '刑事局。';
-      else if ((drugType === 3 || drugType === 4) && amount > 1 && amount <= 20) resultAnswerDiv.textContent = '航醫。';
-      else if ((drugType === 3 || drugType === 4) && amount > 20 && amount <= 100) {
+      else if ((drugType === 3 ) && amount > 100) resultAnswerDiv.textContent = '刑事局。';
+        else if (( drugType === 4) && amount > 20) resultAnswerDiv.textContent = '刑事局。';
+        else if (( drugType === 4) && amount <20) resultAnswerDiv.textContent = '航醫。';
+      else if ((drugType === 3 ) && amount > 1 && amount <= 20) resultAnswerDiv.textContent = '航醫。';
+      else if ((drugType === 3 ) && amount > 20 && amount <= 100) {
         otherDrugOptionsGroup.style.display = 'block';
         document.getElementById('otherDrugOptions').onchange = function () {
           const val = this.value;
