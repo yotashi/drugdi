@@ -149,6 +149,7 @@
     const optionsMap = {
       '1': '大麻類',
       '2': '古柯類',
+      '5': '罌粟類',
       '3': '甲基安非他命類',
       '4': '非屬以上'
     };
@@ -170,7 +171,7 @@
 
     drugOptions.onchange = function () {
       const selected = this.value;
-      if (selected === '1' || selected === '2') resultAnswerDiv.textContent = '調查局。';
+      if (selected === '1' || selected === '2'|| selected === '5') resultAnswerDiv.textContent = '調查局。';
       else if (selected === '3') resultAnswerDiv.textContent = '航醫。';
       else resultAnswerDiv.textContent = '刑事局。';
 
