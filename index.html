@@ -71,6 +71,7 @@
 <div class="container">
   <h1>毒品要送哪</h1>
 
+  <!-- 是否混合式 -->
   <div class="form-group">
     <label for="isMixed">是否為混合式毒品？</label>
     <select id="isMixed">
@@ -79,27 +80,54 @@
     </select>
   </div>
 
-  <div class="form-group" id="quantityGroup">
-    <label for="quantity">總數量：</label>
-    <input type="number" id="quantity" placeholder="請輸入總數量"/>
+  <!-- ===== 混合式毒品欄位 ===== -->
+  <!-- 新增：混合式子分類 -->
+  <div class="form-group" id="mixedSubTypeGroup" style="display:block;">
+    <label for="mixedSubType">混合式毒品種類：</label>
+    <select id="mixedSubType">
+      <option value="cigarette">菸彈</option>
+      <option value="other">其他</option>
+    </select>
   </div>
 
+  <!-- 混合式數量（原有） -->
+  <div class="form-group" id="quantityGroup">
+    <label for="quantity">總數量：</label>
+    <input type="number" id="quantity" min="1" placeholder="請輸入總數量"/>
+  </div>
+
+  <!-- ===== 非混合式毒品欄位 ===== -->
+  <!-- 毒品級數 -->
   <div class="form-group" id="drugTypeGroup" style="display:none;">
     <label for="drugType">毒品種類級數（1-4）：</label>
     <input type="number" id="drugType" min="1" max="4" placeholder="請輸入1至4的數字"/>
   </div>
 
+  <!-- 新增：1級毒品子分類（依托類 / 其他） -->
+  <div class="form-group" id="drugType1SubGroup" style="display:none;">
+    <label for="drugType1Sub">一級毒品分類：</label>
+    <select id="drugType1Sub">
+      <option value="etomidate">依托類（含瓶裝菸油及粉末）</option>
+      <option value="other">其他</option>
+    </select>
+  </div>
+
+  <!-- 克數 -->
   <div class="form-group" id="amountGroup" style="display:none;">
     <label for="amount">克數：</label>
     <input type="number" id="amount" placeholder="請輸入克數"/>
   </div>
 
+  <!-- 二級毒品種類選單（動態產生） -->
   <div class="form-group" id="drugOptionsGroup" style="display:none;">
     <label for="drugOptions">選擇毒品類型：</label>
-    <select id="drugOptions"></select>
+    <select id="drugOptions">
+      <option disabled selected>請選擇毒品類型</option>
+    </select>
   </div>
 
-  <div class="form-group options-group" id="otherDrugOptionsGroup" style="display:none;">
+  <!-- 三級毒品子分類（愷他命 / 其他） -->
+  <div class="form-group" id="otherDrugOptionsGroup" style="display:none;">
     <label for="otherDrugOptions">選擇毒品種類：</label>
     <select id="otherDrugOptions">
       <option value="1">愷他命、硝甲西泮</option>
@@ -114,38 +142,54 @@
     <div class="refresh-text" id="refreshText"></div>
   </div>
 </div>
-<!-- 🔗 Google Drive 連結區塊 -->
+
+<!-- Google Drive 連結 -->
 <div style="text-align: center; margin-top: 30px;">
   <p><strong>666抽樣及分工表在以下連結：</strong></p>
   <a href="https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL" target="_blank">
     👉 點我前往 Google Drive 資料夾
   </a>
-   <p>混合式毒品，係指毒品咖啡包、果汁包、神仙水、菸彈、彩虹菸等，以毒品混合其他物質加工製成之新興食品或菸品</p>
+  <p>混合式毒品，係指毒品咖啡包、果汁包、神仙水、菸彈、彩虹菸等，以毒品混合其他物質加工製成之新興食品或菸品</p>
   <p>*瓶裝菸油、針筒不屬於混合式毒品*</p>
 </div>
 
 <script>
-  const isMixedEl = document.getElementById('isMixed');
-  const quantityGroup = document.getElementById('quantityGroup');
-  const drugTypeGroup = document.getElementById('drugTypeGroup');
-  const amountGroup = document.getElementById('amountGroup');
-  const drugOptionsGroup = document.getElementById('drugOptionsGroup');
-  const otherDrugOptionsGroup = document.getElementById('otherDrugOptionsGroup');
-  const resultAnswerDiv = document.getElementById('resultAnswer');
-  const refreshTextDiv = document.getElementById('refreshText');
-  const resultDiv = document.getElementById('result');
+  const isMixedEl            = document.getElementById('isMixed');
+  const mixedSubTypeGroup    = document.getElementById('mixedSubTypeGroup');
+  const quantityGroup        = document.getElementById('quantityGroup');
+  const drugTypeGroup        = document.getElementById('drugTypeGroup');
+  const drugType1SubGroup    = document.getElementById('drugType1SubGroup');
+  const amountGroup          = document.getElementById('amountGroup');
+  const drugOptionsGroup     = document.getElementById('drugOptionsGroup');
+  const otherDrugOptionsGroup= document.getElementById('otherDrugOptionsGroup');
+  const resultAnswerDiv      = document.getElementById('resultAnswer');
+  const refreshTextDiv       = document.getElementById('refreshText');
+  const resultDiv            = document.getElementById('result');
+  const drugTypeEl           = document.getElementById('drugType');
 
+  // 切換「混合式 / 非混合式」顯示
   isMixedEl.addEventListener('change', function () {
     const isMixed = this.value;
-    quantityGroup.style.display = isMixed === 'yes' ? 'block' : 'none';
-    drugTypeGroup.style.display = isMixed === 'no' ? 'block' : 'none';
-    amountGroup.style.display = isMixed === 'no' ? 'block' : 'none';
-    drugOptionsGroup.style.display = 'none';
+    // 混合式欄位
+    mixedSubTypeGroup.style.display  = isMixed === 'yes' ? 'block' : 'none';
+    quantityGroup.style.display      = isMixed === 'yes' ? 'block' : 'none';
+    // 非混合式欄位
+    drugTypeGroup.style.display      = isMixed === 'no' ? 'block' : 'none';
+    drugType1SubGroup.style.display  = 'none';
+    amountGroup.style.display        = isMixed === 'no' ? 'block' : 'none';
+    drugOptionsGroup.style.display   = 'none';
     otherDrugOptionsGroup.style.display = 'none';
     resultDiv.style.display = 'none';
   });
 
-  function updateDrugOptionsLazy(optionValues) {
+  // 若選非混合式，監聽級數輸入，若為1級則顯示子分類
+  drugTypeEl.addEventListener('input', function () {
+    const val = parseInt(this.value);
+    drugType1SubGroup.style.display = (val === 1) ? 'block' : 'none';
+  });
+
+  // 動態產生二級毒品下拉選單
+  function buildDrugOptions(optionValues) {
     const optionsMap = {
       '1': '大麻類',
       '2': '古柯類',
@@ -155,77 +199,139 @@
     };
     const drugOptions = document.getElementById('drugOptions');
     drugOptions.innerHTML = '<option disabled selected>請選擇毒品類型</option>';
-    drugOptionsGroup.style.display = 'block';
-
-    let loaded = false;
-    drugOptions.addEventListener('click', function () {
-      if (loaded) return;
-      optionValues.forEach(val => {
-        const opt = document.createElement('option');
-        opt.value = val;
-        opt.textContent = optionsMap[val];
-        drugOptions.appendChild(opt);
-      });
-      loaded = true;
+    optionValues.forEach(val => {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = optionsMap[val];
+      drugOptions.appendChild(opt);
     });
+    drugOptionsGroup.style.display = 'block';
 
     drugOptions.onchange = function () {
       const selected = this.value;
-      if (selected === '1' || selected === '2'|| selected === '3') resultAnswerDiv.textContent = '調查局。';
-      else if (selected === '4') resultAnswerDiv.textContent = '航醫。';
-      else resultAnswerDiv.textContent = '刑事局。';
-
-      if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
+      if (selected === '1' || selected === '2' || selected === '3') {
+        resultAnswerDiv.textContent = '調查局。';
+      } else if (selected === '4') {
+        resultAnswerDiv.textContent = '航醫。';
+      } else {
+        resultAnswerDiv.textContent = '刑事局。';
+      }
+      refreshTextDiv.textContent = '請重新刷新';
     };
+  }
+
+  function showResult(text) {
+    resultAnswerDiv.textContent = text;
+    refreshTextDiv.textContent  = '請重新刷新';
+  }
+
+  function resetResult() {
+    resultAnswerDiv.textContent = '';
+    refreshTextDiv.textContent  = '';
+    drugOptionsGroup.style.display      = 'none';
+    otherDrugOptionsGroup.style.display = 'none';
   }
 
   function checkDrug() {
     resultDiv.style.display = 'block';
-    drugOptionsGroup.style.display = 'none';
-    otherDrugOptionsGroup.style.display = 'none';
-    resultAnswerDiv.textContent = '';
-    refreshTextDiv.textContent = '';
+    resetResult();
 
     const isMixed = isMixedEl.value;
 
+    // =========================================================
+    // 混合式毒品邏輯
+    // =========================================================
     if (isMixed === 'yes') {
-      const quantity = parseFloat(document.getElementById('quantity').value);
+      const mixedSubType = document.getElementById('mixedSubType').value;
+      const quantity     = parseFloat(document.getElementById('quantity').value);
+
       if (!quantity || quantity <= 0) {
         resultAnswerDiv.textContent = '請輸入有效的總數量。';
         return;
       }
-      if (quantity < 10) resultAnswerDiv.textContent = '航醫。';
-      else if (quantity < 500) resultAnswerDiv.textContent = '抽樣後送航醫。';
-      else resultAnswerDiv.textContent = '抽樣後送刑事局。';
-    } else {
-      const drugType = parseInt(document.getElementById('drugType').value);
-      const amount = parseFloat(document.getElementById('amount').value);
-      if (!amount || amount <= 0 || drugType < 1 || drugType > 4 || !Number.isInteger(drugType)) {
-        resultAnswerDiv.textContent = '請檢查級數或重量輸入是否正確。';
-        return;
-      }
 
-      if (drugType === 1 && amount <= 1) resultAnswerDiv.textContent = '航醫。';
-      else if (drugType === 1 && amount > 1) resultAnswerDiv.textContent = '調查局。';
-        else if (drugType === 2 &&  amount <= 1) resultAnswerDiv.textContent = '航醫。';
-      else if (drugType === 2 && amount > 1 && amount <= 10) resultAnswerDiv.textContent = '本局鑑識中心。';
-      else if (drugType === 2 && amount > 10 && amount <= 100) updateDrugOptionsLazy(['1', '2', '3', '4', '5']);
-      else if (drugType === 2 && amount > 100) updateDrugOptionsLazy(['1', '2', '4']);
-      else if ((drugType === 3 ) && amount > 100) resultAnswerDiv.textContent = '刑事局。';
-        else if (( drugType === 4) && amount > 20) resultAnswerDiv.textContent = '刑事局。';
-        else if (( drugType === 4) && amount <20) resultAnswerDiv.textContent = '航醫。';
-      else if ((drugType === 3 ) && amount > 1 && amount <= 20) resultAnswerDiv.textContent = '航醫。';
-      else if ((drugType === 3 ) && amount > 20 && amount <= 100) {
+      if (mixedSubType === 'cigarette') {
+        // 菸彈專屬邏輯
+        if (quantity <= 9) {
+          showResult('航醫。');
+        } else if (quantity <= 14) {
+          showResult('抽樣後送航醫。');
+        } else {
+          showResult('抽樣後送刑事局。');
+        }
+      } else {
+        // 其他：維持原先邏輯
+        if (quantity < 10) {
+          showResult('航醫。');
+        } else if (quantity < 500) {
+          showResult('抽樣後送航醫。');
+        } else {
+          showResult('抽樣後送刑事局。');
+        }
+      }
+      return;
+    }
+
+    // =========================================================
+    // 非混合式毒品邏輯
+    // =========================================================
+    const drugType = parseInt(drugTypeEl.value);
+    const amount   = parseFloat(document.getElementById('amount').value);
+
+    if (!amount || amount <= 0 || drugType < 1 || drugType > 4 || !Number.isInteger(drugType)) {
+      resultAnswerDiv.textContent = '請檢查級數或重量輸入是否正確。';
+      return;
+    }
+
+    // ----- 一級毒品 -----
+    if (drugType === 1) {
+      const sub = document.getElementById('drugType1Sub').value;
+      if (sub === 'etomidate') {
+        // 依托類（含瓶裝菸油及粉末）
+        showResult(amount < 1 ? '航醫。' : '刑事局。');
+      } else {
+        // 其他
+        showResult(amount < 1 ? '航醫。' : '調查局。');
+      }
+      return;
+    }
+
+    // ----- 二級毒品 -----
+    if (drugType === 2) {
+      if (amount <= 1) {
+        showResult('航醫。');
+      } else if (amount <= 10) {
+        showResult('本局鑑識中心。');
+      } else if (amount <= 100) {
+        buildDrugOptions(['1', '2', '3', '4', '5']);
+      } else {
+        buildDrugOptions(['1', '2', '4']);
+      }
+      return;
+    }
+
+    // ----- 三級毒品 -----
+    if (drugType === 3) {
+      if (amount <= 1) {
+        showResult('航醫。');
+      } else if (amount <= 20) {
+        showResult('航醫。');
+      } else if (amount <= 100) {
         otherDrugOptionsGroup.style.display = 'block';
         document.getElementById('otherDrugOptions').onchange = function () {
           const val = this.value;
-          resultAnswerDiv.textContent = val === '1' ? '航醫。' : '刑事局。';
-          refreshTextDiv.textContent = '請重新刷新';
+          showResult(val === '1' ? '航醫。' : '刑事局。');
         };
-      } else resultAnswerDiv.textContent = '刑事局。';
+      } else {
+        showResult('刑事局。');
+      }
+      return;
     }
 
-    if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
+    // ----- 四級毒品 -----
+    if (drugType === 4) {
+      showResult(amount >= 20 ? '刑事局。' : '航醫。');
+    }
   }
 </script>
 </body>
