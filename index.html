@@ -1,285 +1,328 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>毒品要送哪</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f4f4f9;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>毒品要送哪</title>
+<style>
+  :root {
+    --bg: #f3f5f8; --card: #ffffff; --text: #1d2733; --muted: #5d6b7a; --line: #d5dce4;
+    --accent: #1f5fbf; --accent-text: #ffffff;
+    --med-bg: #e3eefc; --med-fg: #0f3f85;
+    --inv-bg: #e1f4e8; --inv-fg: #14602f;
+    --cib-bg: #fdebd6; --cib-fg: #8a4a05;
+    --lab-bg: #ece6fa; --lab-fg: #4a2f93;
+    --warn-bg: #fff6d6; --warn-fg: #6b5200;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12171d; --card: #1b232c; --text: #e6ebf0; --muted: #9aa7b5; --line: #323e4b;
+      --accent: #5b9cf0; --accent-text: #0b1a2e;
+      --med-bg: #17324f; --med-fg: #a9cdf7;
+      --inv-bg: #15382400; --inv-fg: #9be0b3;
+      --cib-bg: #46290a; --cib-fg: #f6c68c;
+      --lab-bg: #2c2350; --lab-fg: #cdbdf5;
+      --warn-bg: #3d3300; --warn-fg: #f1d86b;
     }
-    h1 {
-      text-align: center;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-    }
-    select, input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #f8d7da;
-      border: 1px solid #f5c6cb;
-      border-radius: 5px;
-      color: #721c24;
-    }
-    .result-answer {
-      font-size: 18px;
-      font-weight: bold;
-      color: #d9534f;
-    }
-    .refresh-text {
-      font-size: 16px;
-      color: #6c757d;
-    }
-  </style>
+    :root { --inv-bg: #153824; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.6;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 4px 0 16px; text-align: center; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .field { margin-bottom: 18px; }
+  .field[hidden] { display: none; }
+  .label { display: block; font-weight: 700; margin-bottom: 8px; }
+  .hint { font-size: .85rem; color: var(--muted); margin-top: 6px; }
+  .seg { display: grid; gap: 8px; grid-template-columns: repeat(var(--n, 2), 1fr); }
+  .seg button {
+    font: inherit; padding: 12px 8px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--text); min-height: 48px;
+  }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 700; }
+  input[type="number"], select {
+    font: inherit; width: 100%; padding: 12px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--card); color: var(--text);
+  }
+  button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .reset {
+    font: inherit; width: 100%; padding: 12px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--line); background: transparent; color: var(--muted);
+  }
+  #result { margin-top: 16px; }
+  .res { border-radius: 12px; padding: 18px; }
+  .res .dest { font-size: 2rem; font-weight: 800; line-height: 1.2; }
+  .res .basis { margin-top: 6px; font-size: .95rem; opacity: .9; }
+  .res .tag { display: inline-block; margin-top: 10px; padding: 2px 10px; border-radius: 999px; font-size: .85rem; font-weight: 700; background: rgba(0,0,0,.12); }
+  .res a { color: inherit; font-weight: 700; display: inline-block; margin-top: 10px; }
+  .c-med { background: var(--med-bg); color: var(--med-fg); }
+  .c-inv { background: var(--inv-bg); color: var(--inv-fg); }
+  .c-cib { background: var(--cib-bg); color: var(--cib-fg); }
+  .c-lab { background: var(--lab-bg); color: var(--lab-fg); }
+  .c-warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .c-warn .dest { font-size: 1.05rem; font-weight: 700; }
+  details { margin-top: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+  summary { cursor: pointer; font-weight: 700; }
+  details p { margin: 10px 0 0; font-size: .92rem; color: var(--muted); }
+  .foot { margin-top: 16px; text-align: center; font-size: .8rem; color: var(--muted); }
+</style>
 </head>
 <body>
-<div class="container">
+<main class="wrap">
   <h1>毒品要送哪</h1>
 
-  <div class="form-group">
-    <label for="isMixed">是否為混合式毒品？</label>
-    <select id="isMixed">
-      <option value="yes" selected>是</option>
-      <option value="no">否</option>
-    </select>
+  <div class="panel">
+    <div class="field">
+      <span class="label" id="lblMode">是否為混合式毒品？</span>
+      <div class="seg" role="group" aria-labelledby="lblMode" id="segMode" style="--n:2">
+        <button type="button" data-v="mixed">是（混合式）</button>
+        <button type="button" data-v="single">否（非混合式）</button>
+      </div>
+      <div class="hint">瓶裝菸油、針筒不屬於混合式毒品。</div>
+    </div>
+
+    <div class="field" id="fQty" hidden>
+      <label class="label" for="qty">總數量（包／瓶／罐／顆／支）</label>
+      <input type="number" id="qty" inputmode="numeric" min="0" step="1" placeholder="請輸入總數量" />
+      <div class="hint">注意：彩虹菸若有外包裝以「整包」計算，不以支計算。</div>
+    </div>
+
+    <div class="field" id="fLevel" hidden>
+      <span class="label" id="lblLevel">毒品級數</span>
+      <div class="seg" role="group" aria-labelledby="lblLevel" id="segLevel" style="--n:4">
+        <button type="button" data-v="1">一級</button>
+        <button type="button" data-v="2">二級</button>
+        <button type="button" data-v="3">三級</button>
+        <button type="button" data-v="4">四級</button>
+      </div>
+    </div>
+
+    <div class="field" id="fSub1" hidden>
+      <span class="label" id="lblSub1">一級毒品分類</span>
+      <div class="seg" role="group" aria-labelledby="lblSub1" id="segSub1" style="--n:2">
+        <button type="button" data-v="etomidate">依托類（含瓶裝菸油及粉末）</button>
+        <button type="button" data-v="other">其他</button>
+      </div>
+    </div>
+
+    <div class="field" id="fAmount" hidden>
+      <label class="label" for="amount">重量（克）</label>
+      <input type="number" id="amount" inputmode="decimal" min="0" step="any" placeholder="請輸入克數" />
+    </div>
+
+    <div class="field" id="fClass2" hidden>
+      <label class="label" for="class2">毒品類型</label>
+      <select id="class2"></select>
+    </div>
+
+    <div class="field" id="fSub3" hidden>
+      <span class="label" id="lblSub3">三級毒品種類</span>
+      <div class="seg" role="group" aria-labelledby="lblSub3" id="segSub3" style="--n:2">
+        <button type="button" data-v="ketamine">愷他命、硝甲西泮</button>
+        <button type="button" data-v="other">其他</button>
+      </div>
+    </div>
+
+    <button type="button" class="reset" id="reset">重設</button>
   </div>
 
-  <!-- 混合式：數量 -->
-  <div class="form-group" id="quantityGroup">
-    <label for="quantity">總數量：</label>
-    <input type="number" id="quantity" placeholder="請輸入總數量"/>
-  </div>
+  <div id="result" aria-live="polite"></div>
 
-  <!-- 非混合式：級數 -->
-  <div class="form-group" id="drugTypeGroup" style="display:none;">
-    <label for="drugType">毒品種類級數（1-4）：</label>
-    <input type="number" id="drugType" min="1" max="4" placeholder="請輸入1至4的數字"/>
-  </div>
+  <details>
+    <summary>混合式毒品的定義</summary>
+    <p>毒品咖啡包、果汁包、神仙水、菸彈、彩虹菸等，以毒品混合其他物質加工製成之新興食品或菸品。</p>
+    <p>彩虹菸若有外包裝以整包計算，不以支計算。</p>
+  </details>
 
-  <!-- 一級毒品子分類（依托類 / 其他） -->
-  <div class="form-group" id="drugType1SubGroup" style="display:none;">
-    <label for="drugType1Sub">一級毒品分類：</label>
-    <select id="drugType1Sub">
-      <option value="etomidate">依托類（含瓶裝菸油及粉末）</option>
-      <option value="other">其他</option>
-    </select>
-  </div>
-
-  <!-- 非混合式：克數 -->
-  <div class="form-group" id="amountGroup" style="display:none;">
-    <label for="amount">克數：</label>
-    <input type="number" id="amount" placeholder="請輸入克數"/>
-  </div>
-
-  <!-- 二級毒品種類選單（動態產生） -->
-  <div class="form-group" id="drugOptionsGroup" style="display:none;">
-    <label for="drugOptions">選擇毒品類型：</label>
-    <select id="drugOptions"></select>
-  </div>
-
-  <!-- 三級毒品子分類（愷他命 / 其他） -->
-  <div class="form-group options-group" id="otherDrugOptionsGroup" style="display:none;">
-    <label for="otherDrugOptions">選擇毒品種類：</label>
-    <select id="otherDrugOptions">
-      <option value="1">愷他命、硝甲西泮</option>
-      <option value="2">其他</option>
-    </select>
-  </div>
-
-  <button onclick="checkDrug()">提交</button>
-
-  <div id="result" class="result" style="display:none;">
-    <div class="result-answer" id="resultAnswer"></div>
-    <div class="refresh-text" id="refreshText"></div>
-  </div>
-</div>
-
-<!-- 🔗 Google Drive 連結區塊 -->
-<div style="text-align: center; margin-top: 30px;">
-  <p><strong>666抽樣及分工表在以下連結：</strong></p>
-  <a href="https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL" target="_blank">
-    👉 點我前往 Google Drive 資料夾
-  </a>
-  <p>混合式毒品，係指毒品咖啡包、果汁包、神仙水、菸彈、彩虹菸等，以毒品混合其他物質加工製成之新興食品或菸品</p>
-  <p>*瓶裝菸油、針筒不屬於混合式毒品*</p>
-</div>
+  <p class="foot">本工具僅供參考，請以最新內規為準。</p>
+</main>
 
 <script>
-  const isMixedEl             = document.getElementById('isMixed');
-  const quantityGroup         = document.getElementById('quantityGroup');
-  const drugTypeGroup         = document.getElementById('drugTypeGroup');
-  const drugType1SubGroup     = document.getElementById('drugType1SubGroup');
-  const amountGroup           = document.getElementById('amountGroup');
-  const drugOptionsGroup      = document.getElementById('drugOptionsGroup');
-  const otherDrugOptionsGroup = document.getElementById('otherDrugOptionsGroup');
-  const resultAnswerDiv       = document.getElementById('resultAnswer');
-  const refreshTextDiv        = document.getElementById('refreshText');
-  const resultDiv             = document.getElementById('result');
-  const drugTypeEl            = document.getElementById('drugType');
+/* ============================================================
+   規則表：每一列 { lt: 上界, dest }，數值「小於 lt」即落在該列（不含上界）。
+   例如 一級依托類：<1 航醫、<10 本局刑事鑑識中心、其餘刑事局。
+   二級已改為「不含邊界」：<1、<10、<100。
+   ============================================================ */
+const DEST = {
+  med: { name: '航醫',            cls: 'c-med' },
+  inv: { name: '調查局',          cls: 'c-inv' },
+  cib: { name: '刑事局',          cls: 'c-cib' },
+  lab: { name: '本局刑事鑑識中心', cls: 'c-lab' },
+  lab2:{ name: '本局刑事鑑識中心', cls: 'c-lab' },
+};
+const INF = Infinity;
 
-  // 切換混合式 / 非混合式
-  isMixedEl.addEventListener('change', function () {
-    const isMixed = this.value;
-    quantityGroup.style.display         = isMixed === 'yes' ? 'block' : 'none';
-    drugTypeGroup.style.display         = isMixed === 'no'  ? 'block' : 'none';
-    drugType1SubGroup.style.display     = 'none';
-    amountGroup.style.display           = isMixed === 'no'  ? 'block' : 'none';
-    drugOptionsGroup.style.display      = 'none';
-    otherDrugOptionsGroup.style.display = 'none';
-    resultDiv.style.display             = 'none';
-  });
+const RULES = {
+  mixed: [
+    { lt: 10,  dest: 'med' },
+    { lt: 500, dest: 'med', sample: true },
+    { lt: INF, dest: 'cib', sample: true },
+  ],
+  1: {
+    etomidate: [ { lt: 1, dest: 'med' }, { lt: 10, dest: 'lab' }, { lt: INF, dest: 'cib' } ],
+    other:     [ { lt: 1, dest: 'med' }, { lt: INF, dest: 'inv' } ],
+  },
+  2: [ { lt: 1, dest: 'med' }, { lt: 10, dest: 'lab2' }, { lt: 100, ask: 'full' }, { lt: INF, ask: 'short' } ],
+  3: [ { lt: 20, dest: 'med' } ],      // 20 以下航醫；>20 且 ≤100 依種類；>100 刑事局（沿用原邏輯）
+  4: [ { lt: 20, dest: 'med' }, { lt: INF, dest: 'cib' } ],
+};
 
-  // 若輸入一級，顯示子分類選單
-  drugTypeEl.addEventListener('input', function () {
-    const val = parseInt(this.value);
-    drugType1SubGroup.style.display = (val === 1) ? 'block' : 'none';
-  });
+const CLASS2 = { 1: '大麻類', 2: '古柯類', 3: '罌粟類', 4: '甲基安非他命類', 5: '非屬以上' };
+const CLASS2_DEST = { 1: 'inv', 2: 'inv', 3: 'inv', 4: 'med', 5: 'cib' };
+const CLASS2_OPTIONS = { full: [1, 2, 3, 4, 5], short: [1, 2, 4] };
 
-  function updateDrugOptionsLazy(optionValues) {
-    const optionsMap = {
-      '1': '大麻類',
-      '2': '古柯類',
-      '3': '罌粟類',
-      '4': '甲基安非他命類',
-      '5': '非屬以上'
-    };
-    const drugOptions = document.getElementById('drugOptions');
-    drugOptions.innerHTML = '<option disabled selected>請選擇毒品類型</option>';
-    drugOptionsGroup.style.display = 'block';
+const DRIVE = 'https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL';
 
-    let loaded = false;
-    drugOptions.addEventListener('click', function () {
-      if (loaded) return;
-      optionValues.forEach(val => {
-        const opt = document.createElement('option');
-        opt.value = val;
-        opt.textContent = optionsMap[val];
-        drugOptions.appendChild(opt);
-      });
-      loaded = true;
-    });
+const state = { mode: null, level: null, sub1: null, sub3: null, class2: '' };
+const $ = id => document.getElementById(id);
 
-    drugOptions.onchange = function () {
-      const selected = this.value;
-      if (selected === '1' || selected === '2' || selected === '3') resultAnswerDiv.textContent = '調查局。';
-      else if (selected === '4') resultAnswerDiv.textContent = '航醫。';
-      else resultAnswerDiv.textContent = '刑事局。';
+function pick(table, v) { return table.find(r => v < r.lt); }
 
-      if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
-    };
+/* ---------- 判斷：回傳 { need } 或 { dest, basis, sample } ---------- */
+function compute() {
+  const qty = parseFloat($('qty').value);
+  const amount = parseFloat($('amount').value);
+
+  if (!state.mode) return { need: '請先選擇是否為混合式毒品。' };
+
+  if (state.mode === 'mixed') {
+    if (!(qty > 0)) return { need: '請輸入總數量。' };
+    const r = pick(RULES.mixed, qty);
+    return { dest: DEST[r.dest].name, cls: DEST[r.dest].cls, sample: r.sample,
+             basis: `混合式・總數量 ${qty}` };
   }
 
-  function checkDrug() {
-    resultDiv.style.display             = 'block';
-    drugOptionsGroup.style.display      = 'none';
-    otherDrugOptionsGroup.style.display = 'none';
-    resultAnswerDiv.textContent         = '';
-    refreshTextDiv.textContent          = '';
+  if (!state.level) return { need: '請選擇毒品級數。' };
+  const lv = state.level;
 
-    const isMixed = isMixedEl.value;
+  if (lv === 1 && !state.sub1) return { need: '請選擇一級毒品分類。' };
+  if (!(amount > 0)) return { need: '請輸入重量（克）。' };
+  const head = `${['', '一', '二', '三', '四'][lv]}級・${amount} g`;
 
-    // ── 混合式毒品（原始邏輯） ──────────────────────────────
-    if (isMixed === 'yes') {
-      const quantity = parseFloat(document.getElementById('quantity').value);
-      if (!quantity || quantity <= 0) {
-        resultAnswerDiv.textContent = '請輸入有效的總數量。';
-        return;
-      }
-      if (quantity < 10)        resultAnswerDiv.textContent = '航醫。';
-      else if (quantity < 500)  resultAnswerDiv.textContent = '抽樣後送航醫。';
-      else                      resultAnswerDiv.textContent = '抽樣後送刑事局。';
+  if (lv === 1) {
+    const r = pick(RULES[1][state.sub1], amount);
+    const sub = state.sub1 === 'etomidate' ? '依托類' : '其他';
+    return { dest: DEST[r.dest].name, cls: DEST[r.dest].cls, basis: `${head}・${sub}` };
+  }
 
-    // ── 非混合式毒品 ────────────────────────────────────────
-    } else {
-      const drugType = parseInt(drugTypeEl.value);
-      const amount   = parseFloat(document.getElementById('amount').value);
+  if (lv === 2) {
+    const r = pick(RULES[2], amount);
+    if (r.dest) return { dest: DEST[r.dest].name, cls: DEST[r.dest].cls, basis: head };
+    if (!state.class2) return { need: '請選擇毒品類型。' };
+    const d = CLASS2_DEST[state.class2];
+    return { dest: DEST[d].name, cls: DEST[d].cls, basis: `${head}・${CLASS2[state.class2]}` };
+  }
 
-      if (!amount || amount <= 0 || drugType < 1 || drugType > 4 || !Number.isInteger(drugType)) {
-        resultAnswerDiv.textContent = '請檢查級數或重量輸入是否正確。';
-        return;
-      }
-
-      // 一級毒品
-      if (drugType === 1) {
-        const sub = document.getElementById('drugType1Sub').value;
-        if (sub === 'etomidate') {
-          // 依托類（含瓶裝菸油及粉末）
-          if (amount < 1)        resultAnswerDiv.textContent = '航醫。';
-          else if (amount < 10)  resultAnswerDiv.textContent = '本局刑事鑑識中心。';
-          else                   resultAnswerDiv.textContent = '刑事局。';
-        } else {
-          // 其他
-          if (amount < 1)  resultAnswerDiv.textContent = '航醫。';
-          else             resultAnswerDiv.textContent = '調查局。';
-        }
-
-      // 二級毒品（原始邏輯）
-      } else if (drugType === 2) {
-        if (amount <= 1)              resultAnswerDiv.textContent = '航醫。';
-        else if (amount <= 10)        resultAnswerDiv.textContent = '本局鑑識中心。';
-        else if (amount <= 100)       updateDrugOptionsLazy(['1', '2', '3', '4', '5']);
-        else                          updateDrugOptionsLazy(['1', '2', '4']);
-
-      // 三級毒品（原始邏輯）
-      } else if (drugType === 3) {
-        if (amount > 100) {
-          resultAnswerDiv.textContent = '刑事局。';
-        } else if (amount > 20 && amount <= 100) {
-          otherDrugOptionsGroup.style.display = 'block';
-          document.getElementById('otherDrugOptions').onchange = function () {
-            resultAnswerDiv.textContent = this.value === '1' ? '航醫。' : '刑事局。';
-            refreshTextDiv.textContent  = '請重新刷新';
-          };
-        } else if (amount > 1 && amount <= 20) {
-          resultAnswerDiv.textContent = '航醫。';
-        } else {
-          resultAnswerDiv.textContent = '航醫。';
-        }
-
-      // 四級毒品（原始邏輯）
-      } else if (drugType === 4) {
-        if (amount < 20)  resultAnswerDiv.textContent = '航醫。';
-        else              resultAnswerDiv.textContent = '刑事局。';
-      }
+  if (lv === 3) {
+    if (amount > 100) return { dest: DEST.cib.name, cls: DEST.cib.cls, basis: head };
+    if (amount > 20) {
+      if (!state.sub3) return { need: '請選擇三級毒品種類。' };
+      const isK = state.sub3 === 'ketamine';
+      const d = isK ? 'med' : 'cib';
+      return { dest: DEST[d].name, cls: DEST[d].cls,
+               basis: `${head}・${isK ? '愷他命、硝甲西泮' : '其他'}` };
     }
-
-    if (resultAnswerDiv.textContent !== '') refreshTextDiv.textContent = '請重新刷新';
+    return { dest: DEST.med.name, cls: DEST.med.cls, basis: head };
   }
+
+  const r = pick(RULES[4], amount);
+  return { dest: DEST[r.dest].name, cls: DEST[r.dest].cls, basis: head };
+}
+
+/* ---------- 欄位顯示 ---------- */
+function setPressed(segId, value) {
+  document.querySelectorAll(`#${segId} button`).forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.v === String(value))));
+}
+
+function fillClass2(kind) {
+  const sel = $('class2');
+  const ids = CLASS2_OPTIONS[kind];
+  const key = kind + ids.join('');
+  if (sel.dataset.key === key) return;
+  sel.dataset.key = key;
+  sel.innerHTML = '<option value="" disabled selected>請選擇毒品類型</option>' +
+    ids.map(v => `<option value="${v}">${CLASS2[v]}</option>`).join('');
+  state.class2 = '';
+}
+
+function updateFields() {
+  const amount = parseFloat($('amount').value);
+  const single = state.mode === 'single';
+  $('fQty').hidden    = state.mode !== 'mixed';
+  $('fLevel').hidden  = !single;
+  $('fSub1').hidden   = !(single && state.level === 1);
+  $('fAmount').hidden = !(single && state.level);
+
+  let needClass2 = false, needSub3 = false;
+  if (single && amount > 0) {
+    if (state.level === 2) {
+      const r = pick(RULES[2], amount);
+      if (r.ask) { needClass2 = true; fillClass2(r.ask); }
+    }
+    if (state.level === 3 && amount > 20 && amount <= 100) needSub3 = true;
+  }
+  $('fClass2').hidden = !needClass2;
+  $('fSub3').hidden   = !needSub3;
+  if (!needClass2) { state.class2 = ''; $('class2').dataset.key = ''; }
+  if (!needSub3)   { state.sub3 = null; setPressed('segSub3', null); }
+}
+
+function render() {
+  updateFields();
+  const out = $('result');
+  const r = compute();
+  if (r.need) {
+    out.innerHTML = `<div class="res c-warn"><div class="dest">${r.need}</div></div>`;
+    return;
+  }
+  out.innerHTML =
+    `<div class="res ${r.cls}">
+       <div class="dest">${r.dest}</div>
+       <div class="basis">${r.basis}</div>
+       ${r.sample ? '<span class="tag">需先抽樣</span><br><a href="' + DRIVE + '" target="_blank" rel="noopener">開啟抽樣及分工表（Google Drive）</a>' : ''}
+     </div>`;
+}
+
+/* ---------- 事件 ---------- */
+function bindSeg(segId, key, num) {
+  $(segId).addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    state[key] = num ? Number(b.dataset.v) : b.dataset.v;
+    setPressed(segId, state[key]);
+    if (key === 'mode') resetFields(true);
+    if (key === 'level') { state.sub1 = null; setPressed('segSub1', null); state.sub3 = null; }
+    render();
+  });
+}
+bindSeg('segMode', 'mode');
+bindSeg('segLevel', 'level', true);
+bindSeg('segSub1', 'sub1');
+bindSeg('segSub3', 'sub3');
+
+$('qty').addEventListener('input', render);
+$('amount').addEventListener('input', render);
+$('class2').addEventListener('change', e => { state.class2 = e.target.value; render(); });
+
+function resetFields(keepMode) {
+  $('qty').value = ''; $('amount').value = '';
+  state.level = state.sub1 = state.sub3 = null; state.class2 = '';
+  $('class2').dataset.key = '';
+  setPressed('segLevel', null); setPressed('segSub1', null); setPressed('segSub3', null);
+  if (!keepMode) { state.mode = null; setPressed('segMode', null); }
+}
+
+$('reset').addEventListener('click', () => { resetFields(false); render(); });
+
+render();
 </script>
 </body>
 </html>
