@@ -89,7 +89,7 @@
     </div>
 
     <div class="field" id="fQty" hidden>
-      <label class="label" for="qty">總數量（包／瓶／罐／顆／支）</label>
+      <label class="label" for="qty">總數量（包／瓶／罐／支）</label>
       <input type="number" id="qty" inputmode="numeric" min="0" step="1" placeholder="請輸入總數量" />
       <div class="hint">注意：彩虹菸若有外包裝以「整包」計算，不以支計算。</div>
     </div>
@@ -177,8 +177,6 @@ const RULES = {
 const CLASS2 = { 1: '大麻類', 2: '古柯類', 3: '罌粟類', 4: '甲基安非他命類', 5: '非屬以上' };
 const CLASS2_DEST = { 1: 'inv', 2: 'inv', 3: 'inv', 4: 'med', 5: 'cib' };
 const CLASS2_OPTIONS = { full: [1, 2, 3, 4, 5], short: [1, 2, 4] };
-
-const DRIVE = 'https://drive.google.com/drive/folders/1ovJWlgRgYDq2LlylBGwLd-gxTz-2kgQL';
 
 const state = { mode: null, level: null, sub1: null, sub3: null, class2: '' };
 const $ = id => document.getElementById(id);
@@ -287,7 +285,7 @@ function render() {
     `<div class="res ${r.cls}">
        <div class="dest">${r.dest}</div>
        <div class="basis">${r.basis}</div>
-       ${r.sample ? '<span class="tag">需先抽樣</span><br><a href="' + DRIVE + '" target="_blank" rel="noopener">開啟抽樣及分工表（Google Drive）</a>' : ''}
+       ${r.sample ? '<span class="tag">需先抽樣</span>' : ''}
      </div>`;
 }
 
