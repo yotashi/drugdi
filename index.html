@@ -19,12 +19,11 @@
       --bg: #12171d; --card: #1b232c; --text: #e6ebf0; --muted: #9aa7b5; --line: #323e4b;
       --accent: #5b9cf0; --accent-text: #0b1a2e;
       --med-bg: #17324f; --med-fg: #a9cdf7;
-      --inv-bg: #15382400; --inv-fg: #9be0b3;
+      --inv-bg: #153824; --inv-fg: #9be0b3;
       --cib-bg: #46290a; --cib-fg: #f6c68c;
       --lab-bg: #2c2350; --lab-fg: #cdbdf5;
       --warn-bg: #3d3300; --warn-fg: #f1d86b;
     }
-    :root { --inv-bg: #153824; }
   }
   * { box-sizing: border-box; }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -146,9 +145,9 @@
 
 <script>
 /* ============================================================
-   規則表：每一列 { lt: 上界, dest }，數值「小於 lt」即落在該列（不含上界）。
-   例如 一級依托類：<1 航醫、<10 本局刑事鑑識中心、其餘刑事局。
-   二級已改為「不含邊界」：<1、<10、<100。
+   規則表：每一列 { lt: 上界, ... }，區間一律「下界包含、上界不包含」：
+   數值 v 落在第一個符合 v < lt 的列，即 [前一列 lt, 本列 lt)。
+   例如 一級依托類：[0,1) 航醫、[1,10) 本局刑事鑑識中心、[10,∞) 刑事局。
    ============================================================ */
 const DEST = {
   med: { name: '航醫',            cls: 'c-med' },
@@ -170,13 +169,14 @@ const RULES = {
     other:     [ { lt: 1, dest: 'med' }, { lt: INF, dest: 'inv' } ],
   },
   2: [ { lt: 1, dest: 'med' }, { lt: 10, dest: 'lab2' }, { lt: 100, ask: 'full' }, { lt: INF, ask: 'short' } ],
-  3: [ { lt: 20, dest: 'med' } ],      // 20 以下航醫；>20 且 ≤100 依種類；>100 刑事局（沿用原邏輯）
+  // 三級：[0,20) 航醫；[20,100) 依種類；[100,∞) 刑事局
+  3: [ { lt: 20, dest: 'med' }, { lt: 100, ask: 'sub3' }, { lt: INF, dest: 'cib' } ],
   4: [ { lt: 20, dest: 'med' }, { lt: INF, dest: 'cib' } ],
 };
 
 const CLASS2 = { 1: '大麻類', 2: '古柯類', 3: '罌粟類', 4: '甲基安非他命類', 5: '非屬以上' };
 const CLASS2_DEST = { 1: 'inv', 2: 'inv', 3: 'inv', 4: 'med', 5: 'cib' };
-const CLASS2_OPTIONS = { full: [1, 2, 3, 4, 5], short: [1, 2, 4] };
+const CLASS2_OPTIONS = { full: [1, 2, 3, 4, 5], short: [1, 2, 3, 5] };
 
 const state = { mode: null, level: null, sub1: null, sub3: null, class2: '' };
 const $ = id => document.getElementById(id);
@@ -219,15 +219,13 @@ function compute() {
   }
 
   if (lv === 3) {
-    if (amount > 100) return { dest: DEST.cib.name, cls: DEST.cib.cls, basis: head };
-    if (amount > 20) {
-      if (!state.sub3) return { need: '請選擇三級毒品種類。' };
-      const isK = state.sub3 === 'ketamine';
-      const d = isK ? 'med' : 'cib';
-      return { dest: DEST[d].name, cls: DEST[d].cls,
-               basis: `${head}・${isK ? '愷他命、硝甲西泮' : '其他'}` };
-    }
-    return { dest: DEST.med.name, cls: DEST.med.cls, basis: head };
+    const r = pick(RULES[3], amount);
+    if (r.dest) return { dest: DEST[r.dest].name, cls: DEST[r.dest].cls, basis: head };
+    if (!state.sub3) return { need: '請選擇三級毒品種類。' };
+    const isK = state.sub3 === 'ketamine';
+    const d = isK ? 'med' : 'cib';
+    return { dest: DEST[d].name, cls: DEST[d].cls,
+             basis: `${head}・${isK ? '愷他命、硝甲西泮' : '其他'}` };
   }
 
   const r = pick(RULES[4], amount);
@@ -265,7 +263,10 @@ function updateFields() {
       const r = pick(RULES[2], amount);
       if (r.ask) { needClass2 = true; fillClass2(r.ask); }
     }
-    if (state.level === 3 && amount > 20 && amount <= 100) needSub3 = true;
+    if (state.level === 3) {
+      const r = pick(RULES[3], amount);
+      if (r.ask === 'sub3') needSub3 = true;
+    }
   }
   $('fClass2').hidden = !needClass2;
   $('fSub3').hidden   = !needSub3;
